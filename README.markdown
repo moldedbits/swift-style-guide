@@ -1,10 +1,10 @@
-# The Official raywenderlich.com Swift Style Guide.
+# The Official Moldedbits Swift Style Guide.
 
-This style guide is different from others you may see, because the focus is centered on readability for print and the web. We created this style guide to keep the code in our books, tutorials, and starter kits nice and consistent — even though we have many different authors working on the books.
+This style guide is focussed to lay out the standards of syntax, indentation 3rd party libraries and other factors, that are used here at our company, to write code and build applications in Xcode using Apple's swift language. The purpose of this style guide is to maintain consistency, readability and simplicity in the code. Following a common standard will let all the developers understand each others' work in a better way and simpler to modify.
 
 Our overarching goals are conciseness, readability, and simplicity.
 
-Writing Objective-C? Check out our [Objective-C Style Guide](https://github.com/raywenderlich/objective-c-style-guide) too.
+Writing Objective-C? Check out our [Objective-C Style Guide](https://github.com/moldedbits/objective-c-style-guide) too.
 
 ## Table of Contents
 
@@ -36,6 +36,8 @@ Writing Objective-C? Check out our [Objective-C Style Guide](https://github.com/
 ## Naming
 
 Use descriptive names with camel case for classes, methods, variables, etc. Class names should be capitalized, while method names and variables should start with a lower case letter.
+
+In special cases where variable names need to begin with a capital letter (such as `var QRCode`), this rule should be overridden.
 
 **Preferred:**
 
@@ -151,6 +153,39 @@ else {
 ```
 
 * There should be exactly one blank line between methods to aid in visual clarity and organization. Whitespace within methods should separate functionality, but having too many sections in a method often means you should refactor into several methods.
+
+* If methods contain returning statements then leave one line blank before the return statement to let the the return statement be clearly visible. However, if there are no significant statements before the return statement then empty line is not required.
+
+**Preferred:**
+```swift
+func returnSomething() -> AnyObject {
+ if condition {
+  statement1
+  statement2
+  
+  return something
+ } else {
+  return somethingElse
+ }
+ return defaultSomething
+}
+```
+
+**Not Preferred:**
+```swift
+func returnSomething() -> AnyObject {
+ if condition {
+  statement1
+  statement2
+  return something
+ } else {
+
+  return somethingElse
+ }
+ 
+ return defaultSomething
+}
+```
 
 ## Comments
 
