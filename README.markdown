@@ -1,10 +1,28 @@
 # The Official Moldedbits Swift Style Guide.
 
+## Why have a swift style guide?
+
+As the number of people working on a codebase increases, you're more and more likely to encounter developers with differing opinions on how to write code. This can be about anything from tabs vs. spaces to things like when it's appropriate to use computed properties.
+
+These differences in opinion can lead to long, drawn out debates over aesthetics during code reviews. Even once a consensus is reached, it's rarely enforced across the codebase. This approach also means the same decisions have to be made for every new project, and there's very little consistency between the projects themselves.
+
+With a style guide, these decisions can be made once, recorded in a central repository, and then referred to by all of the projects within our company. When a debate over style comes up during a code review, developers can simply refer back to the style guide. If a developer needs to move from one project to another, they can be assured that they won't have to learn a whole host of new conventions and habits.
+
+By codifying best practices in this way we improve consistency, reduce debate, and raise the general quality of all of our codebases.
+
+## Purpose
+
 This style guide is focussed to lay out the standards of syntax, indentation 3rd party libraries and other factors, that are used here at our company, to write code and build applications in Xcode using Apple's swift language. The purpose of this style guide is to maintain consistency, readability and simplicity in the code. Following a common standard will let all the developers understand each others' work in a better way and simpler to modify.
+
+The guidelines here try to accomplish/encourage practices that accomplish the following goals:
+
+- to make it hard to write programmer errors, or at least make them hard to miss.
+- to increase readability and clarity of intent, with assumption that the code will be reviewed/consumed by a different person.
+- to minimize unnecessary code bloat.
+- to observe aesthetics that the majority of the team voted for.
 
 Our overarching goals are conciseness, readability, and simplicity.
 
-Writing Objective-C? Check out our [Objective-C Style Guide](https://github.com/moldedbits/objective-c-style-guide) too.
 
 ## Table of Contents
 
