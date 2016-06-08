@@ -799,7 +799,7 @@ let block ={ () -> Void in
 ***Rationale:*** Separates the brace from the declaration.
 
 
-#### 16.2 Open braces (`{`) for type declarations, functions, and closures should be followed by one empty line. Single-statement closures can be written in one line.
+#### 16.2 Open braces (`{`) for type declarations (class) should be followed by one empty line. Single-statement closures can be written in one line.
 <table>
 <tr><th>OK</th><th>NG</th></tr>
 <tr>
@@ -810,13 +810,11 @@ class Icon {
     var completion: (() -> Void)
 
     init(image: UIImage) {
-    
         self.image = image
         self.completion = { [weak self] in self?.didComplete() }
     }
     
     func doSomething() {
-    
         self.doSomethingElse()
     }
 }
