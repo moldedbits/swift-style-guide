@@ -740,3 +740,26 @@ let color = "red"
 ```swift
 let colour = "red"
 ```
+
+### 15. Semicolons
+
+#### Trailing semicolons (`;`) are not allowed.
+<table>
+<tr><th>OK</th><th>NG</th></tr>
+<tr>
+<td><pre lang=swift>
+self.backgroundColor = UIColor.whiteColor()
+self.completion = { 
+    // ...
+}
+</pre></td>
+<td><pre lang=swift>
+self.backgroundColor = UIColor.whiteColor();
+self.completion = { 
+    // ...
+};
+</pre></td>
+</tr>
+</table>
+
+***Rationale:*** There is no practical advantage of using trailing semicolons. It is, however, a very good way to catch someone copy-pasting Objective-C code ;)
