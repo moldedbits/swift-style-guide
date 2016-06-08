@@ -730,32 +730,190 @@ var faxNumber: Optional<Int>
 ```
 
 
-## Control Flow
+## Functions vs Methods
 
-Prefer the `for-in` style of `for` loop over the `for-condition-increment` style.
+Free functions, which aren't attached to a class or type, should be used sparingly. When possible, prefer to use a method instead of a free function. This aids in readability and discoverability.
+
+Free functions are most appropriate when they aren't associated with any particular type or instance.
+
+**Preferred**
+```swift
+let sorted = items.mergeSort()  // easily discoverable
+rocket.launch()  // clearly acts on the model
+```
+
+**Not Preferred**
+```swift
+let sorted = mergeSort(items)  // hard to discover
+launch(&rocket)
+```
+
+**Free Function Exceptions**
+```swift
+let tuples = zip(a, b)  // feels natural as a free function (symmetry)
+let value = max(x,y,z)  // another free function that feels natural
+```
+
+## Memory Management
+
+Code (even non-production, tutorial demo code) should not create reference cycles. Analyze your object graph and prevent strong cycles with `weak` and `unowned` references. Alternatively, use value types (`struct`, `enum`) to prevent cycles altogether.
+
+### Extending object lifetime
+
+Extend object lifetime using the `[weak self]` and `guard let strongSelf = self else { return }` idiom. `[weak self]` is preferred to `[unowned self]` where it is not immediately obvious that `self` outlives the closure. Explicitly extending lifetime is preferred to optional unwrapping.
+
+**Preferred**
+```swift
+resource.request().onComplete { [weak self] response in
+  guard let strongSelf = self else { return }
+  let model = strongSelf.updateModel(response)
+  strongSelf.updateUI(model)
+}
+```
+
+**Not Preferred**
+```swift
+// might crash if self is released before response returns
+resource.request().onComplete { [unowned self] response in
+  let model = self.updateModel(response)
+  self.updateUI(model)
+}
+```
+
+**Not Preferred**
+```swift
+// deallocate could happen between updating the model and updating UI
+resource.request().onComplete { [weak self] response in
+  let model = self?.updateModel(response)
+  self?.updateUI(model)
+}
+```
+
+## Access Control
+
+Full access control annotation in tutorials can distract from the main topic and is not required. Using `private` appropriately, however, adds clarity and promotes encapsulation. Use `private` as the leading property specifier. The only things that should come before access control are the `static` specifier or attributes such as `@IBAction` and `@IBOutlet`.
 
 **Preferred:**
 ```swift
-for _ in 0..<3 {
-  println("Hello three times")
-}
-
-for (index, person) in attendeeList.enumerate() {
-  println("\(person) is at position #\(index)")
+class TimeMachine {  
+  private dynamic lazy var fluxCapacitor = FluxCapacitor()
 }
 ```
 
 **Not Preferred:**
 ```swift
-for var i = 0; i < 3; i++ {
-  println("Hello three times")
-}
-
-for var i = 0; i < attendeeList.count; i++ {
-  let person = attendeeList[i]
-  println("\(person) is at position #\(i)")
+class TimeMachine {  
+  lazy dynamic private var fluxCapacitor = FluxCapacitor()
 }
 ```
+
+## Control Flow
+
+Prefer the `for-in` style of `for` loop over the `while-condition-increment` style.
+
+**Preferred:**
+```swift
+for _ in 0..<3 {
+  print("Hello three times")
+}
+
+for (index, person) in attendeeList.enumerate() {
+  print("\(person) is at position #\(index)")
+}
+
+for index in 0.stride(to: items.count, by: 2) {
+  print(index)
+}
+
+for index in (0...3).reverse() {
+  print(index)
+}
+```
+
+**Not Preferred:**
+```swift
+var i = 0
+while i < 3 {
+  print("Hello three times")
+  i += 1
+}
+
+
+var i = 0
+while i < attendeeList.count {
+  let person = attendeeList[i]
+  print("\(person) is at position #\(i)")
+  i += 1
+}
+```
+## Golden Path
+
+When coding with conditionals, the left hand margin of the code should be the "golden" or "happy" path. That is, don't nest `if` statements. Multiple return statements are OK. The `guard` statement is built for this.
+
+**Preferred:**
+```swift
+func computeFFT(context: Context?, inputData: InputData?) throws -> Frequencies {
+
+  guard let context = context else { throw FFTError.noContext }
+  guard let inputData = inputData else { throw FFTError.noInputData }
+    
+  // use context and input to compute the frequencies
+    
+  return frequencies
+}
+```
+
+**Not Preferred:**
+```swift
+func computeFFT(context: Context?, inputData: InputData?) throws -> Frequencies {
+
+  if let context = context {
+    if let inputData = inputData {
+      // use context and input to compute the frequencies
+
+      return frequencies
+    }
+    else {
+      throw FFTError.noInputData
+    }
+  }
+  else {
+    throw FFTError.noContext
+  }
+}
+```
+
+When multiple optionals are unwrapped either with `guard` or `if let`, minimize nesting by using the compound version when possible. Example:
+
+**Preferred:**
+```swift
+guard let number1 = number1, number2 = number2, number3 = number3 else { fatalError("impossible") }
+// do something with numbers
+```
+
+**Not Preferred:**
+```swift
+if let number1 = number1 {
+  if let number2 = number2 {
+    if let number3 = number3 {
+      // do something with numbers
+    }
+    else {
+      fatalError("impossible")
+    }
+  }
+  else {
+    fatalError("impossible")
+  }
+}
+else {
+  fatalError("impossible")
+}
+```
+
+### Failing Guards
+
+Guard statements are required to exit in some way. Generally, this should be simple one line statement such as `return`, `throw`, `break`, `continue`, and `fatalError()`. Large code blocks should be avoided. If cleanup code is required for multiple exit points, consider using a `defer` block to avoid cleanup code duplication.
 
 
 ## Semicolons
