@@ -131,14 +131,14 @@ Following Apple's API Design Guidelines, protocols names that describe what some
 
 ### Enumerations
 
-Use UpperCamelCase for enumeration values:
+Following Apple's API Design Guidelines for Swift 3, use lowerCamelCase for enumeration values.
 
 ```swift
 enum Shape {
-  case Rectangle
-  case Square
-  case Triangle
-  case Circle
+  case rectangle
+  case square
+  case rightTriangle
+  case equilateralTriangle
 }
 ```
 
