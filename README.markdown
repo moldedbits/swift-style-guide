@@ -560,6 +560,31 @@ Constants are defined using the `let` keyword, and variables with the `var` keyw
 
 **Tip:** A good technique is to define everything using `let` and only change it to `var` if the compiler complains!
 
+You can define constants on a type rather than an instance of that type using type properties. To declare a type property as a constant simply use `static let`. Type properties declared in this way are generally preferred over global constants because they are easier to distinguish from instance properties. Example:
+
+**Preferred:**
+```swift
+enum Math {
+  static let e  = 2.718281828459045235360287
+  static let pi = 3.141592653589793238462643
+}
+
+radius * Math.pi * 2 // circumference
+
+```
+**Note:** The advantage of using a case-less enumeration is that it can't accidentally be instantiated and works as a pure namespace.
+
+**Not Preferred:**
+```swift
+let e  = 2.718281828459045235360287  // pollutes global namespace
+let pi = 3.141592653589793238462643
+
+radius * pi * 2 // is pi instance data or a global constant?
+```
+
+### Static Methods and Variable Type Properties
+
+Static methods and type properties work similarly to global functions and global variables and should be used sparingly. They are useful when functionality is scoped to a particular type or when Objective-C interoperability is required.
 
 ### Optionals
 
@@ -626,15 +651,37 @@ let centerPoint = CGPointMake(96, 42)
 
 Prefer the struct-scope constants `CGRect.infinite`, `CGRect.null`, etc. over global constants `CGRectInfinite`, `CGRectNull`, etc. For existing variables, you can use the shorter `.zero`.
 
+
+### Lazy Initialization
+
+Consider using lazy initialization for finer grain control over object lifetime. This is especially true for `UIViewController` that loads views lazily. You can either use a closure that is immediately called `{ }()` or call a private factory method. Example:
+
+```swift
+lazy var locationManager: CLLocationManager = self.makeLocationManager()
+
+private func makeLocationManager() -> CLLocationManager {
+  let manager = CLLocationManager()
+  manager.desiredAccuracy = kCLLocationAccuracyBest
+  manager.delegate = self
+  manager.requestAlwaysAuthorization()
+  return manager
+}
+```
+
+**Notes:**
+  - `[unowned self]` is not required here. A retain cycle is not created.
+  - Location manager has a side-effect for popping up UI to ask the user for permission so fine grain control makes sense here.
+
+
 ### Type Inference
 
-Prefer compact code and let the compiler infer the type for a constant or variable, unless you need a specific type other than the default such as `CGFloat` or `Int16`.
+Prefer compact code and let the compiler infer the type for constants or variables of single instances. Type inference is also appropriate for small (non-empty) arrays and dictionaries. When required, specify the specific type such as `CGFloat` or `Int16`.
 
 **Preferred:**
 ```swift
 let message = "Click the button"
 let currentBounds = computeViewBounds()
-var names = [String]()
+var names = ["Mic", "Sam", "Christine"]
 let maximumWidth: CGFloat = 106.5
 ```
 
@@ -642,7 +689,23 @@ let maximumWidth: CGFloat = 106.5
 ```swift
 let message: String = "Click the button"
 let currentBounds: CGRect = computeViewBounds()
+let names = [String]()
+```
+
+#### Type Annotation for Empty Arrays and Dictionaries
+
+For empty arrays and dictionaries, use type annotation. (For an array or dictionary assigned to a large, multi-line literal, use type annotation.)
+
+**Preferred:**
+```swift
 var names: [String] = []
+var lookup: [String: Int] = [:]
+```
+
+**Not Preferred:**
+```swift
+var names = [String]()
+var lookup = [String: Int]()
 ```
 
 **NOTE**: Following this guideline means picking descriptive names is even more important than before.
