@@ -65,9 +65,6 @@ Our overarching goals are conciseness, readability, and simplicity.
   * [Failing Guards](#failing-guards)
 * [15. Semicolons](#semicolons)
 * [16. Parentheses](#parentheses)
-* [17. Copyright Statement](#copyright-statement)
-* [18. Smiley Face](#smiley-face)
-* [19. Credits](#credits)
 
 
 ## Correctness
