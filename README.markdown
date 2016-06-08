@@ -63,8 +63,11 @@ Our overarching goals are conciseness, readability, and simplicity.
 * [13. Control Flow](#control-flow)
 * [14. Golden Path](#golden-path)
   * [Failing Guards](#failing-guards)
-* [15. Semicolons](#15-semicolons)
-* [16. Braces](#16-braces)
+* [15. Semicolons](#semicolons)
+* [16. Parentheses](#parentheses)
+* [17. Copyright Statement](#copyright-statement)
+* [18. Smiley Face](#smiley-face)
+* [19. Credits](#credits)
 
 
 ## Correctness
@@ -141,7 +144,7 @@ enum Shape {
 
 ### Prose
 
-When referring to functions in prose (tutorials, books, comments) include the required parameter names from the caller's perspective or `_` for unnamed parameters.
+When referring to functions in prose (tutorials, books, comments) include the required parameter names from the caller's perspective or `_` for unnamed parameters. Examples:
 
 > Call `convertPointAt(column:row:)` from your own `init` implementation.
 >
@@ -151,7 +154,7 @@ When referring to functions in prose (tutorials, books, comments) include the re
 >
 > You shouldn't call the data source method `tableView(_:cellForRowAtIndexPath:)` directly.
 
-When in doubt, look at how Xcode lists the method in the jump bar – our style here matches that.
+This is the same as the `#selector` syntax. When in doubt, look at how Xcode lists the method in the jump bar – our style here matches that.
 
 ![Methods in Xcode jump bar](screens/xcode-jump-bar.png)
 
@@ -427,41 +430,11 @@ class BoardLocation {
   init(row: Int, column: Int) {
     self.row = row
     self.column = column
-    
+    e
     let closure = {
-      println(self.row)
+      print(self.row)
     }
   }
-}
-```
-
-### Protocol Conformance
-
-When adding protocol conformance to a class, prefer adding a separate class extension for the protocol methods. This keeps the related methods grouped together with the protocol and can simplify instructions to add a protocol to a class with its associated methods.
-
-Also, don't forget the `// MARK: -` comment to keep things well-organized!
-
-**Preferred:**
-```swift
-class MyViewcontroller: UIViewController {
-  // class stuff here
-}
-
-// MARK: - UITableViewDataSource
-extension MyViewcontroller: UITableViewDataSource {
-  // table view data source methods
-}
-
-// MARK: - UIScrollViewDelegate
-extension MyViewcontroller: UIScrollViewDelegate {
-  // scroll view delegate methods
-}
-```
-
-**Not Preferred:**
-```swift
-class MyViewcontroller: UIViewController, UITableViewDataSource, UIScrollViewDelegate {
-  // all methods
 }
 ```
 
@@ -484,6 +457,21 @@ var diameter: Double {
   }
 }
 ```
+
+### Final
+
+Mark classes `final` when inheritance is not intended. Example:
+
+```swift
+// Turn any generic type into a reference type using this Box class.
+final class Box<T> {
+  let value: T 
+  init(_ value: T) {
+    self.value = value
+  }
+}
+```
+
 
 ## Function Declarations
 
@@ -740,195 +728,3 @@ let color = "red"
 ```swift
 let colour = "red"
 ```
-
-### 15. Semicolons
-
-#### Trailing semicolons (`;`) are not allowed.
-<table>
-<tr><th>OK</th><th>NG</th></tr>
-<tr>
-<td><pre lang=swift>
-self.backgroundColor = UIColor.whiteColor()
-self.completion = { 
-    // ...
-}
-</pre></td>
-<td><pre lang=swift>
-self.backgroundColor = UIColor.whiteColor();
-self.completion = { 
-    // ...
-};
-</pre></td>
-</tr>
-</table>
-
-***Rationale:*** There is no practical advantage of using trailing semicolons. It is, however, a very good way to catch someone copy-pasting Objective-C code ;)
-
-
-### 16. Braces
-
-#### 16.1 Open braces (`{`) should be one space following the previous non-whitespace character.
-<table>
-<tr><th>OK</th><th>NG</th></tr>
-<tr>
-<td><pre lang=swift>
-class Icon {
-    // ...
-}
-</pre></td>
-<td><pre lang=swift>
-class Icon{
-    // ...
-}
-</pre></td>
-</tr>
-<tr>
-<td><pre lang=swift>
-let block = { () -> Void in
-    // ...
-}
-</pre></td>
-<td><pre lang=swift>
-let block ={ () -> Void in
-    // ...
-}
-</pre></td>
-</tr>
-</table>
-
-***Rationale:*** Separates the brace from the declaration.
-
-
-#### 16.2 Open braces (`{`) for type declarations (class) should be followed by one empty line. Single-statement closures can be written in one line.
-<table>
-<tr><th>OK</th><th>NG</th></tr>
-<tr>
-<td><pre lang=swift>
-class Icon {
-
-    let image: UIImage
-    var completion: (() -> Void)
-
-    init(image: UIImage) {
-        self.image = image
-        self.completion = { [weak self] in self?.didComplete() }
-    }
-    
-    func doSomething() {
-        self.doSomethingElse()
-    }
-}
-</pre></td>
-<td><pre lang=swift>
-class Icon {
-    let image: UIImage
-
-    init(image: UIImage) {
-        self.image = image
-        self.completion = { [weak self] in print("done"); self?.didComplete() }
-    }
-    
-    func doSomething() { self.doSomethingElse() }
-}
-</pre></td>
-</tr>
-</table>
-
-***Rationale:*** Gives breathing room when scanning for code.
-
-
-#### 16.3 Empty declarations should be written in empty braces (`{}`), otherwise a comment should indicate the reason for the empty implementation.
-<table>
-<tr><th>OK</th><th>NG</th></tr>
-<tr>
-<td><pre lang=swift>
-extension Icon: Equatable {}
-</pre></td>
-<td><pre lang=swift>
-extension Icon: Equatable {
-}
-</pre></td>
-</tr>
-<tr>
-<td><pre lang=swift>
-var didTap: () -> Void = {}
-
-override func drawRect(rect: CGRect) {}
-
-@objc dynamic func controllerDidChangeContent(controller: NSFetchedResultsController) {
-
-    // do nothing; delegate method required to enable tracking mode
-}
-</pre></td>
-<td><pre lang=swift>
-var didTap: () -> Void = { }
-
-override func drawRect(rect: CGRect) {
-}
-
-@objc dynamic func controllerDidChangeContent(controller: NSFetchedResultsController) {
-    
-}
-</pre></td>
-</tr>
-</table>
-
-***Rationale:*** Makes it clear that the declaration was meant to be empty and not just a missing `TODO`. <br/>
-
-
-#### 16.4 Close braces (`}`) should not have empty lines before it. For single line expressions enclosed in braces, there should be one space between the last statement and the closing brace.
-<table>
-<tr><th>OK</th><th>NG</th></tr>
-<tr>
-<td><pre lang=swift>
-class Button {
-
-    var didTap: (sender: Button) -> Void = { _ in }
-
-    func tap() {
-    
-        self.didTap()
-    }
-}
-</pre></td>
-<td><pre lang=swift>
-class Button {
-
-    var didTap: (sender: Button) -> Void = {_ in}
-
-    func tap() {
-    
-        self.didTap()
-        
-    }
-    
-}
-</pre></td>
-</tr>
-</table>
-
-***Rationale:*** Provides breathing room between declarations while keeping code compact.
-
-
-#### 16.5 Close braces (`}`) unless on the same line as its corresponding open brace (`{`), should be left-aligned with the statement that declared the open brace.
-<table>
-<tr><th>OK</th><th>NG</th></tr>
-<tr>
-<td><pre lang=swift>
-lazy var largeImage: UIImage = { () -> UIImage in
-
-    let image = // ...
-    return image
-}()
-</pre></td>
-<td><pre lang=swift>
-lazy var largeImage: UIImage = { () -> UIImage in
-
-    let image = // ...
-    return image
-    }()
-</pre></td>
-</tr>
-</table>
-
-***Rationale:*** Close braces left-aligned with their opening statements visually express their scopes pretty well. This rule is the basis for the succeeding formatting guidelines below.
