@@ -69,9 +69,11 @@ Our overarching goals are conciseness, readability, and simplicity.
 * [18. Smiley Face](#smiley-face)
 * [19. Credits](#credits)
 
+
 ## Correctness
 
 Consider warnings to be errors. This rule informs many stylistic decisions such as not to use the `++` or `--` operators, C-style for loops, or strings as selectors.
+
 
 ## Naming
 
@@ -211,6 +213,78 @@ let color = "red"
 ```swift
 let colour = "red"
 ```
+
+
+## Code Organization
+
+Use extensions to organize your code into logical blocks of functionality. Each extension should be set off with a `// MARK: -` comment to keep things well-organized.
+
+### Protocol Conformance
+
+ In particular, when adding protocol conformance to a model, prefer adding a separate extension for the protocol methods. This keeps the related methods grouped together with the protocol and can simplify instructions to add a protocol to a class with its associated methods.
+
+**Preferred:**
+```swift
+class MyViewcontroller: UIViewController {
+  // class stuff here
+}
+
+// MARK: - UITableViewDataSource
+extension MyViewcontroller: UITableViewDataSource {
+  // table view data source methods
+}
+
+// MARK: - UIScrollViewDelegate
+extension MyViewcontroller: UIScrollViewDelegate {
+  // scroll view delegate methods
+}
+```
+
+**Not Preferred:**
+```swift
+class MyViewcontroller: UIViewController, UITableViewDataSource, UIScrollViewDelegate {
+  // all methods
+}
+```
+
+Since the compiler does not allow you to re-declare protocol conformance in a derived class, it is not always required to replicate the extension groups of the base class. This is especially true if the derived class is a terminal class and a small number of methods are being overriden. When to preserve the extension groups is left to the discretion of the author.
+
+For UIKit view controllers, consider grouping lifecycle, custom accessors, and IBAction in separate class extensions.
+
+### Unused Code
+
+Unused (dead) code, including Xcode template code and placeholder comments should be removed. An exception is when your tutorial or book instructs the user to use the commented code.
+
+Aspirational methods not directly associated with the tutorial whose implementation simply calls the super class should also be removed. This includes any empty/unused UIApplicationDelegate methods.
+
+**Not Preferred:**
+```swift
+override func didReceiveMemoryWarning() {
+   super.didReceiveMemoryWarning()
+  // Dispose of any resources that can be recreated.
+}
+
+override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+   // #warning Incomplete implementation, return the number of sections
+   return 1
+}
+
+override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  // #warning Incomplete implementation, return the number of rows
+  return Database.contacts.count
+}
+
+```
+
+**Preferred:**
+```swift
+override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  return Database.contacts.count
+}
+```
+### Minimal Imports
+
+Keep imports minimal. For example, don't import `UIKit` when importing `Foundation` will suffice.
 
 
 ## Spacing
