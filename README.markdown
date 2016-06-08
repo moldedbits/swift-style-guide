@@ -63,7 +63,7 @@ Our overarching goals are conciseness, readability, and simplicity.
 * [13. Control Flow](#control-flow)
 * [14. Golden Path](#golden-path)
   * [Failing Guards](#failing-guards)
-* [15. Semicolons](#semicolons)
+* [15. Semicolons](#15-semicolons)
 * [16. Parentheses](#parentheses)
 
 
