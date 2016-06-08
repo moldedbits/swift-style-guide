@@ -64,7 +64,7 @@ Our overarching goals are conciseness, readability, and simplicity.
 * [14. Golden Path](#golden-path)
   * [Failing Guards](#failing-guards)
 * [15. Semicolons](#15-semicolons)
-* [16. Parentheses](#parentheses)
+* [16. Braces](#16-braces)
 
 
 ## Correctness
