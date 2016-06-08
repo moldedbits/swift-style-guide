@@ -763,3 +763,174 @@ self.completion = {
 </table>
 
 ***Rationale:*** There is no practical advantage of using trailing semicolons. It is, however, a very good way to catch someone copy-pasting Objective-C code ;)
+
+
+### 16. Braces
+
+#### 16.1 Open braces (`{`) should be one space following the previous non-whitespace character.
+<table>
+<tr><th>OK</th><th>NG</th></tr>
+<tr>
+<td><pre lang=swift>
+class Icon {
+    // ...
+}
+</pre></td>
+<td><pre lang=swift>
+class Icon{
+    // ...
+}
+</pre></td>
+</tr>
+<tr>
+<td><pre lang=swift>
+let block = { () -> Void in
+    // ...
+}
+</pre></td>
+<td><pre lang=swift>
+let block ={ () -> Void in
+    // ...
+}
+</pre></td>
+</tr>
+</table>
+
+***Rationale:*** Separates the brace from the declaration.
+
+
+#### 16.2 Open braces (`{`) for type declarations, functions, and closures should be followed by one empty line. Single-statement closures can be written in one line.
+<table>
+<tr><th>OK</th><th>NG</th></tr>
+<tr>
+<td><pre lang=swift>
+class Icon {
+
+    let image: UIImage
+    var completion: (() -> Void)
+
+    init(image: UIImage) {
+    
+        self.image = image
+        self.completion = { [weak self] in self?.didComplete() }
+    }
+    
+    func doSomething() {
+    
+        self.doSomethingElse()
+    }
+}
+</pre></td>
+<td><pre lang=swift>
+class Icon {
+    let image: UIImage
+
+    init(image: UIImage) {
+        self.image = image
+        self.completion = { [weak self] in print("done"); self?.didComplete() }
+    }
+    
+    func doSomething() { self.doSomethingElse() }
+}
+</pre></td>
+</tr>
+</table>
+
+***Rationale:*** Gives breathing room when scanning for code.
+
+
+#### 16.3 Empty declarations should be written in empty braces (`{}`), otherwise a comment should indicate the reason for the empty implementation.
+<table>
+<tr><th>OK</th><th>NG</th></tr>
+<tr>
+<td><pre lang=swift>
+extension Icon: Equatable {}
+</pre></td>
+<td><pre lang=swift>
+extension Icon: Equatable {
+}
+</pre></td>
+</tr>
+<tr>
+<td><pre lang=swift>
+var didTap: () -> Void = {}
+
+override func drawRect(rect: CGRect) {}
+
+@objc dynamic func controllerDidChangeContent(controller: NSFetchedResultsController) {
+
+    // do nothing; delegate method required to enable tracking mode
+}
+</pre></td>
+<td><pre lang=swift>
+var didTap: () -> Void = { }
+
+override func drawRect(rect: CGRect) {
+}
+
+@objc dynamic func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    
+}
+</pre></td>
+</tr>
+</table>
+
+***Rationale:*** Makes it clear that the declaration was meant to be empty and not just a missing `TODO`. <br/>
+
+
+#### 16.4 Close braces (`}`) should not have empty lines before it. For single line expressions enclosed in braces, there should be one space between the last statement and the closing brace.
+<table>
+<tr><th>OK</th><th>NG</th></tr>
+<tr>
+<td><pre lang=swift>
+class Button {
+
+    var didTap: (sender: Button) -> Void = { _ in }
+
+    func tap() {
+    
+        self.didTap()
+    }
+}
+</pre></td>
+<td><pre lang=swift>
+class Button {
+
+    var didTap: (sender: Button) -> Void = {_ in}
+
+    func tap() {
+    
+        self.didTap()
+        
+    }
+    
+}
+</pre></td>
+</tr>
+</table>
+
+***Rationale:*** Provides breathing room between declarations while keeping code compact.
+
+
+#### 16.5 Close braces (`}`) unless on the same line as its corresponding open brace (`{`), should be left-aligned with the statement that declared the open brace.
+<table>
+<tr><th>OK</th><th>NG</th></tr>
+<tr>
+<td><pre lang=swift>
+lazy var largeImage: UIImage = { () -> UIImage in
+
+    let image = // ...
+    return image
+}()
+</pre></td>
+<td><pre lang=swift>
+lazy var largeImage: UIImage = { () -> UIImage in
+
+    let image = // ...
+    return image
+    }()
+</pre></td>
+</tr>
+</table>
+
+***Rationale:*** Close braces left-aligned with their opening statements visually express their scopes pretty well. This rule is the basis for the succeeding formatting guidelines below.
