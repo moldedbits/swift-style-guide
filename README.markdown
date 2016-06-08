@@ -156,6 +156,38 @@ When in doubt, look at how Xcode lists the method in the jump bar – our style
 
 ![Methods in Xcode jump bar](screens/xcode-jump-bar.png)
 
+### Selectors
+
+Selectors are Obj-C methods that act as handlers for many Cocoa and Cocoa Touch APIs. Prior to Swift 2.2, they were specified using type unsafe strings. This now causes a compiler warning. The "Fix it" button replaces these strings with the **fully qualified** type safe selector. Often, however, you can use context to shorten the expression. This is the preferred style.
+
+**Preferred:**
+```swift
+let sel = #selector(viewDidLoad)
+```
+
+**Not Preferred:**
+```swift
+let sel = #selector(ViewController.viewDidLoad)
+```
+
+### Generics
+
+Generic type parameters should be descriptive, upper camel case names. When a type name doesn't have a meaningful relationship or role, use a traditional single uppercase letter such as `T`, `U`, or `V`.
+
+**Preferred:**
+```swift
+struct Stack<Element> { ... }
+func writeTo<Target: OutputStream>(inout target: Target)
+func max<T: Comparable>(x: T, _ y: T) -> T
+```
+
+**Not Preferred:**
+```swift
+struct Stack<T> { ... }
+func writeTo<target: OutputStream>(inout t: target)
+func max<Thing: Comparable>(x: Thing, _ y: Thing) -> Thing
+```
+
 ### Class Prefixes
 
 Swift types are automatically namespaced by the module that contains them and you should not add a class prefix. If two names from different modules collide you can disambiguate by prefixing the type name with the module name.
@@ -164,6 +196,20 @@ Swift types are automatically namespaced by the module that contains them and yo
 import SomeModule
 
 let myClass = MyModule.UsefulClass()
+```
+
+### Language
+
+Use US English spelling to match Apple's API.
+
+**Preferred:**
+```swift
+let color = "red"
+```
+
+**Not Preferred:**
+```swift
+let colour = "red"
 ```
 
 
